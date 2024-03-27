@@ -1,0 +1,118 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+                
+    <!-- Content Wrapper START -->
+    <div class="main-content">
+        <div class="page-header">
+            <h2 class="header-title">SHOP</h2>
+            <div class="header-sub-title">
+                <nav class="breadcrumb breadcrumb-dash">
+                    <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Dashboard</a>
+                    <a class="breadcrumb-item" href="#">Category</a>
+                    <span class="breadcrumb-item active">Yaratish</span>
+                </nav>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4>Category yaratish</h4>
+                <div class="m-t-25" style="max-width: 700px">
+                    <form method="post">{% csrf_token %}
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Nom</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputPassword3" value="{{queryset.name}}" name="name" >
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Category</label>
+                            <div class="col-sm-10">
+                                <select name="category_id" class="form-control">
+                                    {% for c in categorys %}
+                                        {% if c == queryset.category %}
+                                        <option value="{{c.id}}" selected>{{c.name}}</option>
+                                        {% else %}
+                                        <option value="{{c.id}}">{{c.name}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Narx</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="inputPassword3" value="{{queryset.price}}" name="price">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Son/Miqdor</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="inputPassword3" value="{{queryset.quantity}}" name="quantity">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Yetkazib berish</label>
+                            <div class="col-sm-10">
+                                
+                                <input type="checkbox" class="form-control" id="inputPassword3" placeholder="..." name="delivery" {% if queryset.is_delivery %} checked {% endif %}>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword3" class="col-sm-2 col-form-label">Banner rasm</label>
+                            <div class="col-sm-10">
+                                <input type="file" class="form-control" id="inputPassword3" name="banner_img">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Saqlash</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <label for="images">Rasmlar</label>
+            <input type="file" id="images" name="images" multiple accept="image/*">
+        </div>
+        <div>
+            <label for="videos">Videolar</label>
+            <input type="file" id="videos" name="videos" multiple accept="video/*">
+        </div>
+        <button type="submit">Saqlash</button>
+    </form>
+    <div class="card">
+        {% if request.method == "GET" %}
+            <div class="card-body">
+                <h4>Productni yangilash</h4>
+                <div class="m-t-25">
+                    <div>
+                        <h5>Rasmlar</h5>
+                        {% for image in product.images.all %}
+                            <img src="{{ image.url }}" alt="Product Image" style="max-width: 200px;">
+                            <a href="{% url 'delete_image' image.id %}">O'chirish</a>
+                        {% endfor %}
+                    </div>
+                    <div>
+                        <h5>Videolar</h5>
+                        {% for video in product.videos.all %}
+                            <video width="320" height="240" controls>
+                                <source src="{{ video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% endfor %}
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        {% elif request.method == "POST" %}
+
+        {% endif %}
+    </div>
